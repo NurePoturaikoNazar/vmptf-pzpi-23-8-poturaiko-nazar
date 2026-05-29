@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .generator-box {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="generator-box">
+        <h2>JSON Generator</h2>
+        <input type="text" id="key1" placeholder="Enter key (e.g., role)">
+        <input type="text" id="value1" placeholder="Enter value (e.g., developer)">
+        <input type="text" id="key2" placeholder="Enter key (e.g., status)">
+        <input type="text" id="value2" placeholder="Enter value (e.g., active)">
+        <button id="download-btn">Generate and Save JSON</button>
+    </div>
+
+    <script>
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const k1 = document.getElementById('key1').value;
+            const v1 = document.getElementById('value1').value;
+            const k2 = document.getElementById('key2').value;
+            const v2 = document.getElementById('value2').value;
+
+            if (!k1 || !v1 || !k2 || !v2) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const dataObject = {
+                [k1]: v1,
+                [k2]: v2
+            };
+
+            const jsonString = JSON.stringify(dataObject, null, 2);
+
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'generated_data.json';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>

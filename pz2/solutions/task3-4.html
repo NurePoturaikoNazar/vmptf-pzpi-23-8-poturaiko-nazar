@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .controls input, .controls select {
+            flex: 1;
+            min-width: 140px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+        .task-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-left: 5px solid #007bff;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-tag {
+            background: #e2e3e5;
+            color: #383d41;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .save-btn {
+            background-color: #28a745;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .save-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Interactive Task Board</h2>
+        
+        <div class="form-group">
+            <input type="text" id="task-title" placeholder="Enter task title...">
+            <select id="task-tag">
+                <option value="Urgent">Urgent</option>
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+            </select>
+            <button id="add-task-btn">Add Task</button>
+        </div>
+
+        <hr>
+
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="Search tasks by title...">
+            <select id="filter-tag">
+                <option value="All">All Tags</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+            </select>
+            <select id="sort-order">
+                <option value="none">No Sorting</option>
+                <option value="asc">Alphabetical (A-Z)</option>
+                <option value="desc">Alphabetical (Z-A)</option>
+            </select>
+        </div>
+
+        <ul id="task-list" class="task-list"></ul>
+
+        <button id="save-json-btn" class="save-btn">Export to task3-4.json</button>
+    </div>
+
+    <script>
+        let tasks = [];
+
+        const taskTitleInput = document.getElementById('task-title');
+        const taskTagSelect = document.getElementById('task-tag');
+        const addTaskBtn = document.getElementById('add-task-btn');
+        const searchInput = document.getElementById('search-input');
+        const filterTagSelect = document.getElementById('filter-tag');
+        const sortOrderSelect = document.getElementById('sort-order');
+        const taskListContainer = document.getElementById('task-list');
+        const saveJsonBtn = document.getElementById('save-json-btn');
+
+        function renderTasks() {
+            taskListContainer.innerHTML = '';
+            const searchQuery = searchInput.value.toLowerCase();
+            const selectedFilter = filterTagSelect.value;
+            const sortOrder = sortOrderSelect.value;
+
+            let filteredTasks = tasks.filter(task => {
+                const matchesSearch = task.title.toLowerCase().includes(searchQuery);
+                const matchesFilter = selectedFilter === 'All' || task.tag === selectedFilter;
+                return matchesSearch && matchesFilter;
+            });
+
+            if (sortOrder === 'asc') {
+                filteredTasks.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortOrder === 'desc') {
+                filteredTasks.sort((a, b) => b.title.localeCompare(a.title));
+            }
+
+            filteredTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = 'task-item';
+
+                const titleSpan = document.createElement('span');
+                titleSpan.textContent = task.title;
+
+                const tagSpan = document.createElement('span');
+                tagSpan.className = 'task-tag';
+                tagSpan.textContent = task.tag;
+
+                li.appendChild(titleSpan);
+                li.appendChild(tagSpan);
+                taskListContainer.appendChild(li);
+            });
+        }
+
+        addTaskBtn.addEventListener('click', () => {
+            const title = taskTitleInput.value.trim();
+            const tag = taskTagSelect.value;
+
+            if (!title) {
+                alert('Please enter a task title');
+                return;
+            }
+
+            const newTask = {
+                id: Date.now(),
+                title: title,
+                tag: tag
+            };
+
+            tasks.push(newTask);
+            taskTitleInput.value = '';
+            renderTasks();
+        });
+
+        searchInput.addEventListener('input', renderTasks);
+        filterTagSelect.addEventListener('change', renderTasks);
+        sortOrderSelect.addEventListener('change', renderTasks);
+
+        saveJsonBtn.addEventListener('click', () => {
+            if (tasks.length === 0) {
+                alert('No tasks to save');
+                return;
+            }
+
+            const jsonString = JSON.stringify(tasks, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'task3-4.json';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>

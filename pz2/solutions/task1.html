@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="weather-container"></div>
+
+    <script>
+        const container = document.getElementById('weather-container');
+
+        fetch('https://api.open-meteo.com/v1/forecast?latitude=50.00&longitude=36.23&current_weather=true')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response error');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const weather = data.current_weather;
+                
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const title = document.createElement('h2');
+                title.textContent = 'Current Weather';
+
+                const temp = document.createElement('p');
+                temp.textContent = `Temperature: ${weather.temperature}°C`;
+
+                const speed = document.createElement('p');
+                speed.textContent = `Wind Speed: ${weather.windspeed} km/h`;
+
+                card.appendChild(title);
+                card.appendChild(temp);
+                card.appendChild(speed);
+                container.appendChild(card);
+            })
+            .catch(error => {
+                const errorMsg = document.createElement('p');
+                errorMsg.textContent = 'Failed to load weather data.';
+                errorMsg.style.color = 'red';
+                container.appendChild(errorMsg);
+            });
+    </script>
+</body>
+</html>
