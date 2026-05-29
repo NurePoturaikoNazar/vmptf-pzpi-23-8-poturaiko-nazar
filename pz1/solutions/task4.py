@@ -1,35 +1,14 @@
-import sys
-def quicksort(a):
-    if len(a) <= 1:
-        return a
-    pivot = a[len(a) // 2]
-    left = [x for x in a if x < pivot]
-    mid = [x for x in a if x == pivot]
-    right = [x for x in a if x > pivot]
-    return quicksort(left) + mid + quicksort(right)
+class Book:
+    def __init__(self, title, author, year):
+        self.title = title
+        self.author = author
+        self.year = year
 
-def read_numbers(prompt):
-    s = input(prompt).strip()
-    if not s:
-        return []
-    parts = s.split()
-    nums = []
-    for p in parts:
-        try:
-            nums.append(float(p))
-        except Exception:
-            print("Invalid input", file=sys.stderr)
-            sys.exit(1)
-    return nums
+    def display_info(self):
+        print(f"Title: {self.title}")
+        print(f"Author: {self.author}")
+        print(f"Year: {self.year}")
 
-def main():
-    arr = read_numbers("Enter numbers separated by spaces: ")
-    sorted_arr = quicksort(arr)
-    if all(float(x).is_integer() for x in sorted_arr):
-        out = " ".join(str(int(x)) for x in sorted_arr)
-    else:
-        out = " ".join(str(x) for x in sorted_arr)
-    print("Sorted array:", out)
 
-if __name__ == "__main__":
-    main()
+my_book = Book("The Witcher", "Andrzej Sapkowski", 1993)
+my_book.display_info()
