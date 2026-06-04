@@ -1,0 +1,104 @@
+{% extends 'blog/base.html' %}
+{% block title %}Головна — ConteXT{% endblock %}
+{% block meta_description %}Останні статті та категорії платформи ConteXT{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-title">
+    Ваша платформа для<br><span>ідей та статей</span>
+  </div>
+  <p class="hero-subtitle">
+    Читайте цікаві матеріали, діліться думками у коментарях та публікуйте власні статті.
+  </p>
+  <div class="btn-group">
+    <a href="{% url 'blog:article_list' %}" class="btn btn-primary btn-lg">Переглянути статті →</a>
+    {% if not user.is_authenticated %}
+      <a href="{% url 'blog:register' %}" class="btn btn-secondary btn-lg">Приєднатися</a>
+    {% else %}
+      <a href="{% url 'blog:article_create' %}" class="btn btn-secondary btn-lg">✚ Написати статтю</a>
+    {% endif %}
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-number">{{ articles|length }}</div>
+      <div class="hero-stat-label">Останніх статей</div>
+    </div>
+    <div>
+      <div class="hero-stat-number">{{ categories|length }}</div>
+      <div class="hero-stat-label">Категорій</div>
+    </div>
+  </div>
+</section>
+
+<!-- Latest Articles -->
+<section>
+  <div class="section-header">
+    <h2 class="section-heading">🔥 Останні статті</h2>
+    <a href="{% url 'blog:article_list' %}" class="btn btn-secondary btn-sm">Всі статті →</a>
+  </div>
+
+  {% if articles %}
+    <div class="article-grid">
+      {% for article in articles %}
+      <article class="article-card">
+        <div class="article-meta">
+          {% if article.category %}
+            <a href="{% url 'blog:category_detail' article.category.pk %}" class="badge badge-category">{{ article.category.name }}</a>
+          {% endif %}
+          <span class="badge badge-count">💬 {{ article.num_comments }}</span>
+          <span class="article-date">{{ article.published_at|date:"d.m.Y" }}</span>
+        </div>
+
+        <h3 class="article-title">
+          <a href="{% url 'blog:article_detail' article.pk %}">{{ article.title }}</a>
+        </h3>
+
+        <p class="article-excerpt">{{ article.content|truncatechars:160 }}</p>
+
+        <div class="article-footer">
+          <div class="author-info">
+            <div class="author-avatar">{{ article.author.username|first|upper }}</div>
+            <span>{{ article.author.username }}</span>
+          </div>
+          <a href="{% url 'blog:article_detail' article.pk %}" class="btn btn-secondary btn-sm">Читати</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">📄</div>
+      <div class="empty-state-title">Статей ще немає</div>
+      <p>Будьте першим, хто поділиться думками!</p>
+      {% if user.is_authenticated %}
+        <a href="{% url 'blog:article_create' %}" class="btn btn-primary" style="margin-top:16px;">Написати статтю</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+
+{% if categories %}
+<!-- Categories -->
+<section style="margin-top:60px;">
+  <div class="section-header">
+    <h2 class="section-heading">📂 Категорії</h2>
+    <a href="{% url 'blog:category_list' %}" class="btn btn-secondary btn-sm">Всі категорії →</a>
+  </div>
+  <div class="category-grid">
+    {% for cat in categories %}
+    <a href="{% url 'blog:category_detail' cat.pk %}" style="text-decoration:none;">
+      <div class="category-card">
+        <div class="category-icon">📁</div>
+        <div class="category-name">{{ cat.name }}</div>
+        {% if cat.description %}
+          <p class="category-desc">{{ cat.description }}</p>
+        {% endif %}
+        <span class="category-count">{{ cat.num_articles }} стат{% if cat.num_articles == 1 %}тя{% elif cat.num_articles|divisibleby:1 %}ей{% endif %}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

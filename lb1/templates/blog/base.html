@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}ConteXT{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Платформа ConteXT для публікації статей та обміну думками{% endblock %}"/>
+  {% load static %}
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="{% url 'blog:home' %}" class="navbar-brand">✦ ConteXT</a>
+
+    <ul class="navbar-nav">
+      <li><a href="{% url 'blog:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Головна</a></li>
+      <li><a href="{% url 'blog:article_list' %}" class="nav-link {% if 'article' in request.resolver_match.url_name %}active{% endif %}">Статті</a></li>
+      <li><a href="{% url 'blog:category_list' %}" class="nav-link {% if 'category' in request.resolver_match.url_name %}active{% endif %}">Категорії</a></li>
+
+      <li><div class="nav-divider"></div></li>
+
+      {% if user.is_authenticated %}
+        <li>
+          <a href="{% url 'blog:article_create' %}" class="btn btn-nav-primary">
+            <span>✚</span> <span>Нова стаття</span>
+          </a>
+        </li>
+        <li style="margin-left:8px;">
+          <div class="navbar-user">
+            <div class="avatar">{{ user.username|first|upper }}</div>
+            <span style="color:var(--text-primary); font-weight:500;">{{ user.username }}</span>
+            {% if user.is_staff %}<span class="badge badge-category" style="font-size:0.68rem;">admin</span>{% endif %}
+          </div>
+        </li>
+        <li>
+          <form method="post" action="{% url 'blog:logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-link" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">Вийти</button>
+          </form>
+        </li>
+      {% else %}
+        <li><a href="{% url 'blog:login' %}" class="nav-link">Увійти</a></li>
+        <li><a href="{% url 'blog:register' %}" class="btn btn-nav-primary"><span>Реєстрація</span></a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+<!-- Flash messages -->
+{% if messages %}
+<div class="messages-container" id="messagesContainer">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" onclick="this.remove()">
+      {% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}✕{% elif message.tags == 'warning' %}⚠{% else %}ℹ{% endif %}
+      {{ message }}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Main content -->
+<main class="page-wrapper">
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <span>© 2025 ConteXT — Навчальний проєкт Django</span>
+  </div>
+</footer>
+
+<script>
+  // Auto-dismiss alerts after 4 seconds
+  setTimeout(() => {
+    const container = document.getElementById('messagesContainer');
+    if (container) {
+      container.querySelectorAll('.alert').forEach((el, i) => {
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.4s, transform 0.4s';
+          el.style.opacity = '0';
+          el.style.transform = 'translateX(110%)';
+          setTimeout(() => el.remove(), 400);
+        }, i * 150);
+      });
+    }
+  }, 4000);
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends 'blog/base.html' %}
+{% block title %}Список статей — ConteXT{% endblock %}
+{% block meta_description %}Всі статті платформи ConteXT з сортуванням за датою та популярністю{% endblock %}
+
+{% block content %}
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">Всі статті</h1>
+    <p class="page-subtitle">Всього статей: {{ articles|length }}</p>
+  </div>
+  {% if user.is_authenticated %}
+    <a href="{% url 'blog:article_create' %}" class="btn btn-primary">✚ Нова стаття</a>
+  {% endif %}
+</div>
+
+<!-- Sort bar -->
+<div class="sort-bar">
+  <span class="sort-label">Сортування:</span>
+  <a href="?sort=date" class="sort-btn {% if current_sort == 'date' %}active{% endif %}">
+    📅 За датою
+  </a>
+  <a href="?sort=comments" class="sort-btn {% if current_sort == 'comments' %}active{% endif %}">
+    💬 За коментарями
+  </a>
+</div>
+
+{% if articles %}
+  <div class="article-grid">
+    {% for article in articles %}
+    <article class="article-card">
+      <div class="article-meta">
+        {% if article.category %}
+          <a href="{% url 'blog:category_detail' article.category.pk %}" class="badge badge-category">{{ article.category.name }}</a>
+        {% endif %}
+        <span class="badge badge-count">💬 {{ article.num_comments }}</span>
+        <span class="article-date">{{ article.published_at|date:"d.m.Y H:i" }}</span>
+      </div>
+
+      <h2 class="article-title">
+        <a href="{% url 'blog:article_detail' article.pk %}">{{ article.title }}</a>
+      </h2>
+
+      <p class="article-excerpt">{{ article.content|truncatechars:180 }}</p>
+
+      <div class="article-footer">
+        <div class="author-info">
+          <div class="author-avatar">{{ article.author.username|first|upper }}</div>
+          <span>{{ article.author.username }}</span>
+        </div>
+        <div class="btn-group">
+          {% if user == article.author or user.is_staff %}
+            <a href="{% url 'blog:article_edit' article.pk %}" class="btn btn-secondary btn-sm">✏️</a>
+          {% endif %}
+          <a href="{% url 'blog:article_detail' article.pk %}" class="btn btn-primary btn-sm">Читати →</a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon">📝</div>
+    <div class="empty-state-title">Статей ще немає</div>
+    <p>Будьте першим автором на платформі!</p>
+    {% if user.is_authenticated %}
+      <a href="{% url 'blog:article_create' %}" class="btn btn-primary" style="margin-top:20px;">Написати статтю</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

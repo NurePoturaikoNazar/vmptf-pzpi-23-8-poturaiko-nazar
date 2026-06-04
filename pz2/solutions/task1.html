@@ -24,12 +24,33 @@
     </style>
 </head>
 <body>
+    <div class = "card">
+        
+    <label> 
+    latitude:
+    <input type="text" id="latitude" value="50.00">
+    </label>
+    <button id="load-weather"> Load Weather </button>
+
+    <label> 
+    Longtitude:
+    <input type="text" id="longitude" value="36.23">
+    </label>
+    <button id="load-weather"> Load Weather </button>
+
     <div id="weather-container"></div>
 
     <script>
         const container = document.getElementById('weather-container');
+        const loadButton = document.getElementById('load-weather');
 
-        fetch('https://api.open-meteo.com/v1/forecast?latitude=50.00&longitude=36.23&current_weather=true')
+        loadButton.addEventListener('click', () => {
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+        
+
+        fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response error');
@@ -38,23 +59,12 @@
             })
             .then(data => {
                 const weather = data.current_weather;
-                
-                const card = document.createElement('div');
-                card.className = 'card';
-
-                const title = document.createElement('h2');
-                title.textContent = 'Current Weather';
-
-                const temp = document.createElement('p');
-                temp.textContent = `Temperature: ${weather.temperature}°C`;
-
-                const speed = document.createElement('p');
-                speed.textContent = `Wind Speed: ${weather.windspeed} km/h`;
-
-                card.appendChild(title);
-                card.appendChild(temp);
-                card.appendChild(speed);
-                container.appendChild(card);
+                container.innerHTML = `
+                    <h2>Current Weather</h2>
+                    <p>Temperature: ${weather.temperature} °C</p>
+                    <p>Wind Speed: ${weather.windspeed} km/h</p>
+                    <p>Weather Code: ${weather.weathercode}</p>
+                `;
             })
             .catch(error => {
                 const errorMsg = document.createElement('p');
@@ -62,6 +72,9 @@
                 errorMsg.style.color = 'red';
                 container.appendChild(errorMsg);
             });
+
+        });
     </script>
 </body>
 </html>
+       

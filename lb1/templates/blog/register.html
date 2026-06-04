@@ -1,0 +1,44 @@
+{% extends 'blog/base.html' %}
+{% block title %}Реєстрація — ConteXT{% endblock %}
+{% block meta_description %}Створіть акаунт на ConteXT та публікуйте власні статті{% endblock %}
+
+{% block content %}
+<div class="auth-card" style="max-width:500px;">
+  <div class="auth-logo">✦ ConteXT</div>
+  <p class="auth-subtitle">Створіть свій акаунт</p>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.help_text %}
+        <p style="color:var(--text-muted); font-size:0.78rem; margin-top:4px;">{{ field.help_text }}</p>
+      {% endif %}
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <p class="form-error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary btn-lg" style="width:100%; justify-content:center; margin-top:8px;">
+      Зареєструватися ✓
+    </button>
+  </form>
+
+  <div class="auth-divider">або</div>
+
+  <div style="text-align:center;">
+    <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:12px;">
+      Вже маєте акаунт?
+    </p>
+    <a href="{% url 'blog:login' %}" class="btn btn-secondary" style="width:100%; justify-content:center;">
+      Увійти
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,18 +1,35 @@
 import sys
-from datetime import datetime
-def main():
-    s = input("Enter your birth year (YYYY): ").strip()
+from datetime import date
+
+def read_number (prompt):
     try:
-        year = int(s)
+        return int (input(prompt).strip())
     except Exception:
-        print("Invalid input", file=sys.stderr)
+        print ("incorrect input", file=sys.stderr)
         sys.exit(1)
-    now = datetime.now().year
-    age = now - year
-    if age < 0:
-        print("Invalid birth year", file=sys.stderr)
+
+def main():
+    day = read_number ("enter day (1-31): ")
+    month = read_number ("enter day (1-12): ")
+    year = read_number ("enter day (YYYY): ")
+
+
+    try:
+        birth_date = date(year, month, day)
+    except ValueError:
+        print ("invalid birth date", file=sys.stderr)
         sys.exit(1)
-    print(f"Age: {age} years")
+
+    today = date.today()
+    if birth_date > today:
+        print ("invalid birth date", file=sys.stderr)
+        sys.exit(1)
+
+    age = today.year - birth_date.year
+    if (today.month, today.day) < (birth_date.month, birth_date.day):
+        age -= 1
+
+    print (f"Age: {age} years")
 
 if __name__ == "__main__":
     main()

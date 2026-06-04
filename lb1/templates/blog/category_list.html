@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+{% block title %}Категорії — ConteXT{% endblock %}
+{% block meta_description %}Всі категорії статей платформи ConteXT{% endblock %}
+
+{% block content %}
+<div class="page-header-row">
+  <div class="page-header">
+    <h1 class="page-title">Категорії</h1>
+    <p class="page-subtitle">Всього категорій: {{ categories|length }}</p>
+  </div>
+  {% if user.is_staff %}
+    <a href="{% url 'blog:category_create' %}" class="btn btn-primary">✚ Нова категорія</a>
+  {% endif %}
+</div>
+
+{% if categories %}
+  <div class="category-grid">
+    {% for cat in categories %}
+    <a href="{% url 'blog:category_detail' cat.pk %}" style="text-decoration:none; display:block;">
+      <div class="category-card">
+        <div class="category-icon">📁</div>
+        <div class="category-name">{{ cat.name }}</div>
+        {% if cat.description %}
+          <p class="category-desc">{{ cat.description }}</p>
+        {% else %}
+          <p class="category-desc" style="color:var(--text-muted); font-style:italic;">Опис відсутній</p>
+        {% endif %}
+        <span class="category-count">
+          {{ cat.num_articles }}
+          {% if cat.num_articles == 1 %}стаття{% elif cat.num_articles >= 2 and cat.num_articles <= 4 %}статті{% else %}статей{% endif %}
+        </span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon">📂</div>
+    <div class="empty-state-title">Категорій ще немає</div>
+    <p>Адміністратор може створити категорії.</p>
+  </div>
+{% endif %}
+{% endblock %}

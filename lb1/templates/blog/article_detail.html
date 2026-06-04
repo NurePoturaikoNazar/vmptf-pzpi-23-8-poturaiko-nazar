@@ -1,0 +1,123 @@
+{% extends 'blog/base.html' %}
+{% block title %}{{ article.title }} — ConteXT{% endblock %}
+{% block meta_description %}{{ article.content|truncatechars:160 }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 860px; margin: 0 auto;">
+
+  <!-- Back -->
+  <a href="{% url 'blog:article_list' %}" class="btn btn-secondary btn-sm" style="margin-bottom:24px;">← Назад до списку</a>
+
+  <!-- Article Header -->
+  <header class="article-detail-header">
+    <div class="article-meta" style="margin-bottom:16px;">
+      {% if article.category %}
+        <a href="{% url 'blog:category_detail' article.category.pk %}" class="badge badge-category">📁 {{ article.category.name }}</a>
+      {% endif %}
+      <span class="badge badge-count">💬 {{ article.comments.count }} коментарів</span>
+    </div>
+
+    <h1 class="article-detail-title">{{ article.title }}</h1>
+
+    <div class="article-detail-meta">
+      <div class="meta-item">
+        <div class="author-avatar">{{ article.author.username|first|upper }}</div>
+        <span>{{ article.author.username }}</span>
+      </div>
+      <div class="meta-item">📅 {{ article.published_at|date:"d.m.Y о H:i" }}</div>
+      {% if article.updated_at != article.published_at %}
+        <div class="meta-item" style="color:var(--text-muted);">✏️ Оновлено: {{ article.updated_at|date:"d.m.Y" }}</div>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Author / Edit actions -->
+  {% if can_edit %}
+  <div class="action-bar">
+    <span style="color:var(--text-muted); font-size:0.875rem;">⚙️ Управління статтею</span>
+    <div class="btn-group">
+      <a href="{% url 'blog:article_edit' article.pk %}" class="btn btn-secondary">✏️ Редагувати</a>
+      <a href="{% url 'blog:article_delete' article.pk %}" class="btn btn-danger">🗑️ Видалити</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Article Content -->
+  <div class="article-content">
+    {{ article.content|linebreaks }}
+  </div>
+
+  <!-- Comments Section -->
+  <section class="comments-section">
+    <h2 class="section-title">
+      💬 Коментарі
+      <span class="section-title-count">{{ comments|length }}</span>
+    </h2>
+
+    {% if comments %}
+      {% for comment in comments %}
+      <div class="comment-item">
+        <div class="comment-header">
+          <div class="comment-author">
+            <div class="author-avatar" style="width:32px;height:32px;font-size:0.75rem;">
+              {{ comment.get_display_author|first|upper }}
+            </div>
+            <span>{{ comment.get_display_author }}</span>
+            <span class="comment-date">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+          </div>
+
+          <!-- Delete button: author of comment OR staff -->
+          {% if user.is_authenticated and user == comment.author or user.is_staff %}
+          <form method="post" action="{% url 'blog:comment_delete' comment.pk %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm"
+              onclick="return confirm('Видалити коментар?')">🗑️ Видалити</button>
+          </form>
+          {% endif %}
+        </div>
+        <p class="comment-text">{{ comment.text|linebreaks }}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state" style="padding:32px;">
+        <div class="empty-state-icon">💭</div>
+        <div class="empty-state-title">Коментарів ще немає</div>
+        <p>Будьте першим, хто прокоментує цю статтю!</p>
+      </div>
+    {% endif %}
+
+    <!-- Add Comment -->
+    <div class="comment-form-card">
+      {% if user.is_authenticated %}
+        <h3 style="font-size:1rem; font-weight:700; margin-bottom:16px; color:var(--text-primary);">
+          ✍️ Залишити коментар
+        </h3>
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">Ваш коментар</label>
+            {{ comment_form.text }}
+            {% if comment_form.text.errors %}
+              {% for error in comment_form.text.errors %}
+                <p class="form-error">{{ error }}</p>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-primary">💬 Опублікувати</button>
+        </form>
+      {% else %}
+        <div style="text-align:center; padding:16px;">
+          <p style="color:var(--text-secondary); margin-bottom:16px;">
+            Щоб залишити коментар, потрібно <strong>увійти</strong>.
+          </p>
+          <div class="btn-group" style="justify-content:center;">
+            <a href="{% url 'blog:login' %}?next={{ request.path }}" class="btn btn-primary">Увійти</a>
+            <a href="{% url 'blog:register' %}" class="btn btn-secondary">Реєстрація</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

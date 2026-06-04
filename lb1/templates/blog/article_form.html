@@ -1,0 +1,47 @@
+{% extends 'blog/base.html' %}
+{% block title %}{{ title }} — ConteXT{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <h1 class="form-title">{{ title }}</h1>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.title.id_for_label }}">Заголовок</label>
+      {{ form.title }}
+      {% if form.title.errors %}
+        {% for error in form.title.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.category.id_for_label }}">Категорія</label>
+      {{ form.category }}
+      {% if form.category.errors %}
+        {% for error in form.category.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.content.id_for_label }}">Текст статті</label>
+      {{ form.content }}
+      {% if form.content.errors %}
+        {% for error in form.content.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="btn-group" style="margin-top:8px;">
+      <button type="submit" class="btn btn-primary btn-lg">
+        {% if article %}💾 Зберегти зміни{% else %}✚ Опублікувати статтю{% endif %}
+      </button>
+      {% if article %}
+        <a href="{% url 'blog:article_detail' article.pk %}" class="btn btn-secondary btn-lg">Скасувати</a>
+      {% else %}
+        <a href="{% url 'blog:article_list' %}" class="btn btn-secondary btn-lg">Скасувати</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}

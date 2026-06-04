@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}
+{% block title %}Підтвердження видалення — ConteXT{% endblock %}
+
+{% block content %}
+<div class="confirm-card">
+  <div class="confirm-icon">🗑️</div>
+  <h1 class="confirm-title">Видалити статтю?</h1>
+  <p class="confirm-text">
+    Ви впевнені, що хочете видалити статтю<br>
+    <strong>«{{ article.title }}»</strong>?<br>
+    <span style="color:var(--danger); font-size:0.85rem;">Цю дію неможливо скасувати.</span>
+  </p>
+  <div class="btn-group" style="justify-content:center;">
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger btn-lg">🗑️ Так, видалити</button>
+    </form>
+    <a href="{% url 'blog:article_detail' article.pk %}" class="btn btn-secondary btn-lg">← Скасувати</a>
+  </div>
+</div>
+{% endblock %}
