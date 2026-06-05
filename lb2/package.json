@@ -1,0 +1,10 @@
+{
+  "name": "skillup",
+  "version": "1.0.0",
+  "description": "SkillUp — Fullstack курсова платформа (Node.js + Express + React)",
+  "scripts": {
+    "server": "cd server && node index.js",
+    "client": "cd client && npm start",
+    "install:all": "cd server && npm install && cd ../client && npm install"
+  }
+}

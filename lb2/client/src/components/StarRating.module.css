@@ -1,0 +1,50 @@
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star {
+  background: #eef2ff;
+  border: none;
+  padding: 6px 8px;
+  color: #6b6b8a;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: default;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.star.filled {
+  color: #f5c842;
+  background: #dfe8ff;
+  border-color: transparent;
+}
+
+.star.interactive {
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.star.interactive:hover {
+  transform: scale(1.08);
+  color: #f5c842;
+}
+
+.md .star {
+  font-size: 1.1rem;
+}
+
+.lg .star {
+  font-size: 1.6rem;
+}
+
+.value {
+  margin-left: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6b6b8a;
+}

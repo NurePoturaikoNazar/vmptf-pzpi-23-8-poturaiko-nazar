@@ -1,0 +1,48 @@
+.footer {
+  background: linear-gradient(135deg, #f0ecff 0%, #e8f4f8 100%);
+  border-top: 1px solid rgba(200, 190, 230, 0.3);
+  margin-top: auto;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brand .logo {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #5b4fc7;
+}
+
+.brand p {
+  margin-top: 8px;
+  color: #7a7a9a;
+  font-size: 0.9rem;
+}
+
+.info {
+  text-align: right;
+}
+
+.info p {
+  color: #9a9ab8;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.copy {
+  margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+  .info {
+    text-align: left;
+  }
+}

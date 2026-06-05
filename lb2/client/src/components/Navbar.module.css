@@ -1,0 +1,128 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(200, 190, 230, 0.3);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #5b4fc7;
+  text-decoration: none;
+}
+
+.logoIcon {
+  font-size: 1.5rem;
+}
+
+.nav {
+  display: flex;
+  gap: 8px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #6b6b8a;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.nav a:hover {
+  color: #5b4fc7;
+  background: #f0ecff;
+}
+
+.nav a.active {
+  color: #5b4fc7;
+  background: #ebe6ff;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userName {
+  font-size: 0.9rem;
+  color: #6b6b8a;
+}
+
+.loginLink {
+  text-decoration: none;
+  color: #6b6b8a;
+  font-weight: 500;
+  padding: 8px 16px;
+}
+
+.loginLink:hover {
+  color: #5b4fc7;
+}
+
+.registerBtn {
+  background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+  color: white;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.registerBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(167, 139, 250, 0.4);
+}
+
+.logoutBtn {
+  background: #f5f0ff;
+  border: 1px solid #e0d8f8;
+  color: #6b6b8a;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background: #ebe6ff;
+  color: #5b4fc7;
+}
+
+@media (max-width: 640px) {
+  .container {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .userName {
+    display: none;
+  }
+}
