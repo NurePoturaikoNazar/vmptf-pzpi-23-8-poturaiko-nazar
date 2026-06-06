@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.Lb3" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
+        <item name="colorOnPrimary">@color/text_primary</item>
+        <item name="android:statusBarColor">@color/text_primary</item>
+        <item name="android:navigationBarColor">@color/text_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

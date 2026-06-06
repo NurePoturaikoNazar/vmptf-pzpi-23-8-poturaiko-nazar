@@ -1,0 +1,66 @@
+# IntelliJ / Android Studio
+*.iml
+.idea/
+.gradle/
+/local.properties
+/local.properties
+.DS_Store
+
+# Build directories
+/build/
+/app/build/
+
+# Captures
+/captures/
+
+# NDK
+.externalNativeBuild/
+.cxx/
+
+# Gradle files
+.gradle/
+
+# Kotlin/Native
+/*.kotlin_metadata
+/*.kotlin_module
+
+# Android Studio generated files
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# Logs
+*.log
+
+# Gradle wrappers
+.gradle/
+
+# OS generated files
+Thumbs.db
+
+# JetBrains
+out/
+
+env/
+
+# Misc
+*.keystore
+
+# Recommended by GitHub for Android
+*.apk
+*.ap_ 
+
+# Crashlytics
+crashlytics-build.properties
+
+# Orbitals
+*.orig
+
+# Local environment files
+local.properties
+
+# Generated files
+/build
